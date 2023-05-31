@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
   ImageBackground,
   TextInput,
   TouchableOpacity,
@@ -12,8 +13,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { SvgUri } from "react-native-svg";
-import SVG from "../assets/svg/add.svg";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function RegistrationScreen() {
   const [keyboard, setKeyboard] = useState(false);
@@ -35,18 +35,19 @@ export default function RegistrationScreen() {
         >
           <View style={{ ...styles.form, marginBottom: keyboard ? -185 : 0 }}>
             <View style={styles.uploadwrapper}>
-              <TextInput style={styles.upload}></TextInput>
+              <View style={styles.upload}>
+                <AntDesign
+                  style={styles.addicon}
+                  name="pluscircleo"
+                  size={25}
+                  color="#FF6C00"
+                />
+              </View>
             </View>
             <View style={styles.titlewrapper}>
               <Text style={styles.title}>Реєстрація</Text>
             </View>
-            <View>
-              <SvgUri
-                width="25"
-                height="25"
-                source={require("../assets/svg/add.svg")}
-              />
-            </View>
+
             <TextInput
               style={styles.input}
               placeholder="Логін"
@@ -173,5 +174,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  addicon: {
+    position: "absolute",
+    right: -13,
+    bottom: 14,
   },
 });
