@@ -7,7 +7,10 @@ export const CustomInput = (props) => {
   return (
     <TextInput
       {...props}
-      style={[props.style, isFocused && { border: 1, borderColor: "#FF6C00" }]}
+      style={[
+        props.style,
+        isFocused && { borderWidth: 1, borderColor: "#FF6C00" },
+      ]}
       onBlur={() => setIsFocused(false)}
       onFocus={() => {
         setIsFocused(true);
