@@ -43,14 +43,22 @@ export default function LoginScreen() {
               <CustomInput
                 style={styles.input}
                 placeholder="Адреса електронної пошти"
+                value={data.email}
                 onFocus={() => setKeyboard(true)}
+                onChangeText={(value) =>
+                  setData((prev) => ({ ...prev, email: value }))
+                }
               ></CustomInput>
               <View style={styles.passcontainer}>
                 <CustomInput
                   style={styles.password}
                   placeholder="Пароль"
+                  value={data.password}
                   onFocus={() => setKeyboard(true)}
                   secureTextEntry={hidden}
+                  onChangeText={(value) =>
+                    setData((prev) => ({ ...prev, password: value }))
+                  }
                 ></CustomInput>
                 <Pressable
                   style={styles.hidewrapper}
