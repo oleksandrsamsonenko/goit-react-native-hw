@@ -4,64 +4,104 @@ import {
   Text,
   View,
   ImageBackground,
-  TextInput,
   TouchableOpacity,
   Pressable,
   KeyboardAvoidingView,
-  Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  Image,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { CustomInput } from "../Components/CustomInput";
+import * as ImagePicker from "expo-image-picker";
+
+const initialState = {
+  login: "",
+  email: "",
+  password: "",
+};
 
 export default function RegistrationScreen() {
   const [keyboard, setKeyboard] = useState(false);
   const [hidden, setHidden] = useState(true);
+  const [data, setData] = useState(initialState);
+  const [image, setImage] = useState(null);
 
   const hideKeyboard = () => {
     Keyboard.dismiss();
     setKeyboard(false);
   };
+
+  const pick = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
       <ImageBackground
         source={require("../assets/PhotoBG.jpg")}
         style={styles.background}
       >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "margin"}
-        >
-          <View style={{ ...styles.form, marginBottom: keyboard ? -185 : 0 }}>
-            <View style={styles.uploadwrapper}>
-              <View style={styles.upload}>
-                <AntDesign
+        <KeyboardAvoidingView style={styles.back} behavior="position">
+          <View style={styles.topform}>
+            {image ? (
+              <View style={styles.uploadwrapper}>
+                <Image style={styles.upload} source={{ uri: image }} />
+
+                <Pressable
+                  onPress={() => setImage(null)}
                   style={styles.addicon}
-                  name="pluscircleo"
-                  size={25}
-                  color="#FF6C00"
-                />
+                >
+                  <AntDesign name="minuscircleo" size={25} color="#FF6C00" />
+                </Pressable>
               </View>
-            </View>
+            ) : (
+              <View style={styles.uploadwrapper}>
+                <View style={styles.upload}>
+                  <Pressable onPress={pick} style={styles.addicon}>
+                    <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
+                  </Pressable>
+                </View>
+              </View>
+            )}
             <View style={styles.titlewrapper}>
               <Text style={styles.title}>Реєстрація</Text>
             </View>
-
             <CustomInput
               style={styles.input}
               placeholder="Логін"
+              value={data.login}
+              name="login"
               onFocus={() => setKeyboard(true)}
+              onChangeText={(value) =>
+                setData((prev) => ({ ...prev, login: value }))
+              }
             ></CustomInput>
             <CustomInput
               style={styles.input}
               placeholder="Адреса електронної пошти"
+              value={data.email}
               onFocus={() => setKeyboard(true)}
+              onChangeText={(value) =>
+                setData((prev) => ({ ...prev, email: value }))
+              }
             ></CustomInput>
             <View style={styles.passcontainer}>
               <CustomInput
                 style={styles.password}
                 placeholder="Пароль"
+                value={data.password}
                 onFocus={() => setKeyboard(true)}
+                onChangeText={(value) =>
+                  setData((prev) => ({ ...prev, password: value }))
+                }
                 secureTextEntry={hidden}
               ></CustomInput>
               <Pressable
@@ -73,14 +113,20 @@ export default function RegistrationScreen() {
                 </Text>
               </Pressable>
             </View>
-            <TouchableOpacity style={styles.btn}>
-              <Text style={styles.btntext}>Зареєструватися</Text>
-            </TouchableOpacity>
-            <View style={styles.wrapper}>
-              <Text style={styles.link}>Вже є аккаунт? Увійти</Text>
-            </View>
           </View>
         </KeyboardAvoidingView>
+
+        <View style={styles.bottomform}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => console.log(data, image)}
+          >
+            <Text style={styles.btntext}>Зареєструватися</Text>
+          </TouchableOpacity>
+          <View style={styles.wrapper}>
+            <Text style={styles.link}>Вже є аккаунт? Увійти</Text>
+          </View>
+        </View>
       </ImageBackground>
     </TouchableWithoutFeedback>
   );
@@ -92,15 +138,26 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     justifyContent: "flex-end",
   },
-  form: {
+  back: {
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+  },
+  topform: {
+    alignItems: "center",
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingHorizontal: 16,
+    paddingBottom: 20,
+  },
+  bottomform: {
+    backgroundColor: "#FFFFFF",
+    paddingTop: 23,
+    paddingHorizontal: 16,
     paddingBottom: 78,
   },
   uploadwrapper: {
-    alignItems: "center",
     marginTop: -60,
     marginBottom: 32,
   },
@@ -124,6 +181,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
   input: {
+    width: "100%",
     padding: 16,
     borderColor: "#E8E8E8",
     borderWidth: 1,
@@ -133,8 +191,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   passcontainer: {
-    marginBottom: 43,
-
     width: "100%",
     position: "relative",
   },
