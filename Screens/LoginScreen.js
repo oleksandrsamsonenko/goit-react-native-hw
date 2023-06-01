@@ -11,7 +11,6 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { CustomInput } from "../Components/CustomInput";
-import { AntDesign } from "@expo/vector-icons";
 
 const initialState = {
   email: "",
@@ -30,65 +29,57 @@ export default function LoginScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
-      <ImageBackground
-        source={require("../assets/PhotoBG.jpg")}
-        style={styles.background}
-      >
-        <KeyboardAvoidingView style={styles.back} behavior="position">
-          <View style={styles.topform}>
-            <View style={styles.uploadwrapper}>
-              <View style={styles.upload} onFocus={() => setKeyboard(true)}>
-                <AntDesign
-                  style={styles.addicon}
-                  name="pluscircleo"
-                  size={25}
-                  color="#FF6C00"
-                />
+      <View style={{ flex: 1 }}>
+        <ImageBackground
+          source={require("../assets/PhotoBG.jpg")}
+          style={styles.background}
+        >
+          <KeyboardAvoidingView style={styles.back} behavior="position">
+            <View style={styles.topform}>
+              <View style={styles.titlewrapper}>
+                <Text style={styles.title}>Увійти</Text>
+              </View>
+
+              <CustomInput
+                style={styles.input}
+                placeholder="Адреса електронної пошти"
+                onFocus={() => setKeyboard(true)}
+              ></CustomInput>
+              <View style={styles.passcontainer}>
+                <CustomInput
+                  style={styles.password}
+                  placeholder="Пароль"
+                  onFocus={() => setKeyboard(true)}
+                  secureTextEntry={hidden}
+                ></CustomInput>
+                <Pressable
+                  style={styles.hidewrapper}
+                  onPress={() => setHidden(!hidden)}
+                >
+                  <Text style={styles.hide}>
+                    {hidden ? "Показати" : "Сховати"}
+                  </Text>
+                </Pressable>
               </View>
             </View>
-            <View style={styles.titlewrapper}>
-              <Text style={styles.title}>Увійти</Text>
-            </View>
+          </KeyboardAvoidingView>
 
-            <CustomInput
-              style={styles.input}
-              placeholder="Адреса електронної пошти"
-              onFocus={() => setKeyboard(true)}
-            ></CustomInput>
-            <View style={styles.passcontainer}>
-              <CustomInput
-                style={styles.password}
-                placeholder="Пароль"
-                onFocus={() => setKeyboard(true)}
-                secureTextEntry={hidden}
-              ></CustomInput>
-              <Pressable
-                style={styles.hidewrapper}
-                onPress={() => setHidden(!hidden)}
-              >
-                <Text style={styles.hide}>
-                  {hidden ? "Показати" : "Сховати"}
-                </Text>
-              </Pressable>
+          <View style={styles.bottomform}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => console.log(data)}
+            >
+              <Text style={styles.btntext}>Увійти</Text>
+            </TouchableOpacity>
+            <View style={styles.wrapper}>
+              <Text style={styles.link}>
+                Немає аккаунту?{" "}
+                <Text style={styles.underlinelink}>Зареєструватися</Text>
+              </Text>
             </View>
           </View>
-        </KeyboardAvoidingView>
-
-        <View style={styles.bottomform}>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => console.log(data)}
-          >
-            <Text style={styles.btntext}>Увійти</Text>
-          </TouchableOpacity>
-          <View style={styles.wrapper}>
-            <Text style={styles.link}>
-              Немає аккаунту?{" "}
-              <Text style={styles.underlinelink}>Зареєструватися</Text>
-            </Text>
-          </View>
-        </View>
-      </ImageBackground>
+        </ImageBackground>
+      </View>
     </TouchableWithoutFeedback>
   );
 }
@@ -111,6 +102,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     paddingHorizontal: 16,
     paddingBottom: 20,
+    paddingTop: 32,
   },
   bottomform: {
     backgroundColor: "#FFFFFF",

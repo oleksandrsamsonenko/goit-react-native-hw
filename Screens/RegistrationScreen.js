@@ -45,89 +45,91 @@ export default function RegistrationScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
-      <ImageBackground
-        source={require("../assets/PhotoBG.jpg")}
-        style={styles.background}
-      >
-        <KeyboardAvoidingView style={styles.back} behavior="position">
-          <View style={styles.topform}>
-            {image ? (
-              <View style={styles.uploadwrapper}>
-                <Image style={styles.upload} source={{ uri: image }} />
+      <View style={{ flex: 1 }}>
+        <ImageBackground
+          source={require("../assets/PhotoBG.jpg")}
+          style={styles.background}
+        >
+          <KeyboardAvoidingView style={styles.back} behavior="position">
+            <View style={styles.topform}>
+              {image ? (
+                <View style={styles.uploadwrapper}>
+                  <Image style={styles.upload} source={{ uri: image }} />
 
-                <Pressable
-                  onPress={() => setImage(null)}
-                  style={styles.addicon}
-                >
-                  <AntDesign name="minuscircleo" size={25} color="#FF6C00" />
-                </Pressable>
-              </View>
-            ) : (
-              <View style={styles.uploadwrapper}>
-                <View style={styles.upload}>
-                  <Pressable onPress={pick} style={styles.addicon}>
-                    <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
+                  <Pressable
+                    onPress={() => setImage(null)}
+                    style={styles.addicon}
+                  >
+                    <AntDesign name="closecircleo" size={25} color="#FF6C00" />
                   </Pressable>
                 </View>
+              ) : (
+                <View style={styles.uploadwrapper}>
+                  <View style={styles.upload}>
+                    <Pressable onPress={pick} style={styles.addicon}>
+                      <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
+                    </Pressable>
+                  </View>
+                </View>
+              )}
+              <View style={styles.titlewrapper}>
+                <Text style={styles.title}>Реєстрація</Text>
               </View>
-            )}
-            <View style={styles.titlewrapper}>
-              <Text style={styles.title}>Реєстрація</Text>
-            </View>
-            <CustomInput
-              style={styles.input}
-              placeholder="Логін"
-              value={data.login}
-              name="login"
-              onFocus={() => setKeyboard(true)}
-              onChangeText={(value) =>
-                setData((prev) => ({ ...prev, login: value }))
-              }
-            ></CustomInput>
-            <CustomInput
-              style={styles.input}
-              placeholder="Адреса електронної пошти"
-              value={data.email}
-              onFocus={() => setKeyboard(true)}
-              onChangeText={(value) =>
-                setData((prev) => ({ ...prev, email: value }))
-              }
-            ></CustomInput>
-            <View style={styles.passcontainer}>
               <CustomInput
-                style={styles.password}
-                placeholder="Пароль"
-                value={data.password}
+                style={styles.input}
+                placeholder="Логін"
+                value={data.login}
+                name="login"
                 onFocus={() => setKeyboard(true)}
                 onChangeText={(value) =>
-                  setData((prev) => ({ ...prev, password: value }))
+                  setData((prev) => ({ ...prev, login: value }))
                 }
-                secureTextEntry={hidden}
               ></CustomInput>
-              <Pressable
-                style={styles.hidewrapper}
-                onPress={() => setHidden(!hidden)}
-              >
-                <Text style={styles.hide}>
-                  {hidden ? "Показати" : "Сховати"}
-                </Text>
-              </Pressable>
+              <CustomInput
+                style={styles.input}
+                placeholder="Адреса електронної пошти"
+                value={data.email}
+                onFocus={() => setKeyboard(true)}
+                onChangeText={(value) =>
+                  setData((prev) => ({ ...prev, email: value }))
+                }
+              ></CustomInput>
+              <View style={styles.passcontainer}>
+                <CustomInput
+                  style={styles.password}
+                  placeholder="Пароль"
+                  value={data.password}
+                  onFocus={() => setKeyboard(true)}
+                  onChangeText={(value) =>
+                    setData((prev) => ({ ...prev, password: value }))
+                  }
+                  secureTextEntry={hidden}
+                ></CustomInput>
+                <Pressable
+                  style={styles.hidewrapper}
+                  onPress={() => setHidden(!hidden)}
+                >
+                  <Text style={styles.hide}>
+                    {hidden ? "Показати" : "Сховати"}
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+
+          <View style={styles.bottomform}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => console.log(data, image)}
+            >
+              <Text style={styles.btntext}>Зареєструватися</Text>
+            </TouchableOpacity>
+            <View style={styles.wrapper}>
+              <Text style={styles.link}>Вже є аккаунт? Увійти</Text>
             </View>
           </View>
-        </KeyboardAvoidingView>
-
-        <View style={styles.bottomform}>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => console.log(data, image)}
-          >
-            <Text style={styles.btntext}>Зареєструватися</Text>
-          </TouchableOpacity>
-          <View style={styles.wrapper}>
-            <Text style={styles.link}>Вже є аккаунт? Увійти</Text>
-          </View>
-        </View>
-      </ImageBackground>
+        </ImageBackground>
+      </View>
     </TouchableWithoutFeedback>
   );
 }
