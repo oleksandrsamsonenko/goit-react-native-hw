@@ -4,7 +4,6 @@ import {
   Text,
   View,
   ImageBackground,
-  TextInput,
   TouchableOpacity,
   Pressable,
   KeyboardAvoidingView,
@@ -12,6 +11,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+import { CustomInput } from "../Components/CustomInput";
 
 export default function LoginScreen() {
   const [keyboard, setKeyboard] = useState(false);
@@ -33,27 +33,27 @@ export default function LoginScreen() {
         >
           <View style={{ ...styles.form, marginBottom: keyboard ? -185 : 0 }}>
             <View style={styles.uploadwrapper}>
-              <TextInput
+              <CustomInput
                 style={styles.upload}
                 onFocus={() => setKeyboard(true)}
-              ></TextInput>
+              ></CustomInput>
             </View>
             <View style={styles.titlewrapper}>
               <Text style={styles.title}>Увійти</Text>
             </View>
 
-            <TextInput
+            <CustomInput
               style={styles.input}
               placeholder="Адреса електронної пошти"
               onFocus={() => setKeyboard(true)}
-            ></TextInput>
+            ></CustomInput>
             <View style={styles.passcontainer}>
-              <TextInput
+              <CustomInput
                 style={styles.password}
                 placeholder="Пароль"
                 onFocus={() => setKeyboard(true)}
                 secureTextEntry={hidden}
-              ></TextInput>
+              ></CustomInput>
               <Pressable
                 style={styles.hidewrapper}
                 onPress={() => setHidden(!hidden)}
@@ -127,16 +127,16 @@ const styles = StyleSheet.create({
   },
   passcontainer: {
     marginBottom: 43,
-    borderColor: "#E8E8E8",
-    backgroundColor: "#F6F6F6",
-    borderWidth: 1,
-    borderRadius: 8,
     width: "100%",
     position: "relative",
   },
   password: {
     padding: 16,
     fontSize: 16,
+    borderColor: "#E8E8E8",
+    backgroundColor: "#F6F6F6",
+    borderWidth: 1,
+    borderRadius: 8,
     width: "100%",
   },
   btn: {

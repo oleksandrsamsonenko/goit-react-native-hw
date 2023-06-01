@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   ImageBackground,
   TextInput,
   TouchableOpacity,
@@ -14,6 +13,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { CustomInput } from "../Components/CustomInput";
 
 export default function RegistrationScreen() {
   const [keyboard, setKeyboard] = useState(false);
@@ -31,7 +31,6 @@ export default function RegistrationScreen() {
       >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "margin"}
-          // style={styles.container}
         >
           <View style={{ ...styles.form, marginBottom: keyboard ? -185 : 0 }}>
             <View style={styles.uploadwrapper}>
@@ -48,23 +47,23 @@ export default function RegistrationScreen() {
               <Text style={styles.title}>Реєстрація</Text>
             </View>
 
-            <TextInput
+            <CustomInput
               style={styles.input}
               placeholder="Логін"
               onFocus={() => setKeyboard(true)}
-            ></TextInput>
-            <TextInput
+            ></CustomInput>
+            <CustomInput
               style={styles.input}
               placeholder="Адреса електронної пошти"
               onFocus={() => setKeyboard(true)}
-            ></TextInput>
+            ></CustomInput>
             <View style={styles.passcontainer}>
-              <TextInput
+              <CustomInput
                 style={styles.password}
                 placeholder="Пароль"
                 onFocus={() => setKeyboard(true)}
                 secureTextEntry={hidden}
-              ></TextInput>
+              ></CustomInput>
               <Pressable
                 style={styles.hidewrapper}
                 onPress={() => setHidden(!hidden)}
@@ -135,17 +134,19 @@ const styles = StyleSheet.create({
   },
   passcontainer: {
     marginBottom: 43,
-    borderColor: "#E8E8E8",
-    backgroundColor: "#F6F6F6",
-    borderWidth: 1,
-    borderRadius: 8,
+
     width: "100%",
     position: "relative",
   },
   password: {
     padding: 16,
     fontSize: 16,
+    borderColor: "#E8E8E8",
+    backgroundColor: "#F6F6F6",
+    borderWidth: 1,
+    borderRadius: 8,
     width: "100%",
+    borderRadius: 8,
   },
   btn: {
     backgroundColor: "#FF6C00",
