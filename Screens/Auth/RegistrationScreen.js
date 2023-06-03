@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
@@ -12,7 +13,7 @@ import {
   Image,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { CustomInput } from "../Components/CustomInput";
+import { CustomInput } from "../../Components/CustomInput";
 import * as ImagePicker from "expo-image-picker";
 
 const initialState = {
@@ -26,7 +27,7 @@ export default function RegistrationScreen() {
   const [hidden, setHidden] = useState(true);
   const [data, setData] = useState(initialState);
   const [image, setImage] = useState(null);
-
+  const navigation = useNavigation();
   const hideKeyboard = () => {
     Keyboard.dismiss();
     setKeyboard(false);
@@ -45,9 +46,9 @@ export default function RegistrationScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <ImageBackground
-          source={require("../assets/PhotoBG.jpg")}
+          source={require("../../assets/PhotoBG.jpg")}
           style={styles.background}
         >
           <KeyboardAvoidingView style={styles.back} behavior="position">
@@ -125,7 +126,9 @@ export default function RegistrationScreen() {
               <Text style={styles.btntext}>Зареєструватися</Text>
             </TouchableOpacity>
             <View style={styles.wrapper}>
-              <Text style={styles.link}>Вже є аккаунт? Увійти</Text>
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                <Text style={styles.link}>Вже є аккаунт? Увійти</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ImageBackground>
@@ -135,6 +138,9 @@ export default function RegistrationScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   background: {
     flex: 1,
     resizeMode: "contain",

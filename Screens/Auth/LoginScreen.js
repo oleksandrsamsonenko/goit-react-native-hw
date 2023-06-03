@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
@@ -10,7 +11,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { CustomInput } from "../Components/CustomInput";
+import { CustomInput } from "../../Components/CustomInput";
 
 const initialState = {
   email: "",
@@ -21,6 +22,7 @@ export default function LoginScreen() {
   const [keyboard, setKeyboard] = useState(false);
   const [hidden, setHidden] = useState(true);
   const [data, setData] = useState(initialState);
+  const navigation = useNavigation();
 
   const hideKeyboard = () => {
     Keyboard.dismiss();
@@ -29,9 +31,9 @@ export default function LoginScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <ImageBackground
-          source={require("../assets/PhotoBG.jpg")}
+          source={require("../../assets/PhotoBG.jpg")}
           style={styles.background}
         >
           <KeyboardAvoidingView style={styles.back} behavior="position">
@@ -75,15 +77,20 @@ export default function LoginScreen() {
           <View style={styles.bottomform}>
             <TouchableOpacity
               style={styles.btn}
-              onPress={() => console.log(data)}
+              onPress={() => {
+                console.log(data);
+                navigation.navigate("Home");
+              }}
             >
               <Text style={styles.btntext}>Увійти</Text>
             </TouchableOpacity>
             <View style={styles.wrapper}>
-              <Text style={styles.link}>
-                Немає аккаунту?{" "}
-                <Text style={styles.underlinelink}>Зареєструватися</Text>
-              </Text>
+              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                <Text style={styles.link}>
+                  Немає аккаунту?{" "}
+                  <Text style={styles.underlinelink}>Зареєструватися</Text>
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ImageBackground>
@@ -93,6 +100,9 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   background: {
     flex: 1,
     resizeMode: "contain",
@@ -184,6 +194,11 @@ const styles = StyleSheet.create({
   hide: {
     color: "#1B4371",
     fontSize: 16,
+  },
+  underlinelink: {
+    color: "#1B4371",
+    fontSize: 16,
+    textDecorationLine: "underline",
   },
   link: {
     color: "#1B4371",
