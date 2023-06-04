@@ -22,12 +22,13 @@ const initialState = {
   password: "",
 };
 
-export default function RegistrationScreen() {
+export default function RegistrationScreen({ setLoginStatus }) {
   const [keyboard, setKeyboard] = useState(false);
   const [hidden, setHidden] = useState(true);
   const [data, setData] = useState(initialState);
   const [image, setImage] = useState(null);
   const navigation = useNavigation();
+
   const hideKeyboard = () => {
     Keyboard.dismiss();
     setKeyboard(false);
@@ -121,7 +122,10 @@ export default function RegistrationScreen() {
           <View style={styles.bottomform}>
             <TouchableOpacity
               style={styles.btn}
-              onPress={() => console.log(data, image)}
+              onPress={() => {
+                console.log(data, image);
+                setLoginStatus(true);
+              }}
             >
               <Text style={styles.btntext}>Зареєструватися</Text>
             </TouchableOpacity>

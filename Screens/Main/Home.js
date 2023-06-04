@@ -1,33 +1,89 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Text } from "react-native";
+import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
 
-export default function Home() {
+import PostsScreen from "./PostsScreen";
+import CreatePostsScreen from "./CreatePostsScreen";
+import ProfileScreen from "./ProfileScreen";
+import LogOut from "../../Components/LogOut";
+
+export default function Home({ navigation }) {
   const Tabs = createBottomTabNavigator();
 
-  function Settings() {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Settings!</Text>
-      </View>
-    );
-  }
-
   return (
-    <Tabs.Navigator>
+    <Tabs.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          alignItems: "center",
+          paddingHorizontal: 60,
+        },
+      }}
+    >
       <Tabs.Screen
-        name="Settings"
-        component={Settings}
-        options={{ headerShown: false }}
+        name="PostsScreen"
+        component={PostsScreen}
+        options={{
+          title: "Публікації",
+          headerRight: LogOut,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons name="grid-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      {/* <Tabs.Screen
+        name="CreatePostsScreen1"
+        component={CreatePostsScreen}
+        options={{
+          // headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => (
+            <View
+              style={{
+                backgroundColor: "#FF6C00",
+                width: 70,
+                height: 40,
+                borderRadius: 20,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <AntDesign name="plus" size={15} color="white" />
+            </View>
+          ),
+        }}
+      /> */}
+
+      <Tabs.Screen
+        name="CreatePostsScreen"
+        component={CreatePostsScreen}
+        options={{
+          tabBarButton: () => (
+            <TouchableOpacity
+              style={{
+                alignSelf: "center",
+                width: 70,
+                height: 40,
+                backgroundColor: "#FF6C00",
+                borderRadius: 20,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() => navigation.navigate("CreatePostsScreen")}
+            >
+              <AntDesign name="plus" size={15} color="white" />
+            </TouchableOpacity>
+          ),
+        }}
       />
       <Tabs.Screen
-        name="Settings1"
-        component={Settings}
-        options={{ headerShown: false }}
-      />
-      <Tabs.Screen
-        name="Settings2"
-        component={Settings}
-        options={{ headerShown: false }}
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Feather name="user" size={size} color={color} />
+          ),
+        }}
       />
     </Tabs.Navigator>
   );

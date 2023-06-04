@@ -18,7 +18,7 @@ const initialState = {
   password: "",
 };
 
-export default function LoginScreen() {
+export default function LoginScreen({ setLoginStatus }) {
   const [keyboard, setKeyboard] = useState(false);
   const [hidden, setHidden] = useState(true);
   const [data, setData] = useState(initialState);
@@ -79,7 +79,8 @@ export default function LoginScreen() {
               style={styles.btn}
               onPress={() => {
                 console.log(data);
-                navigation.navigate("Home");
+                // navigation.navigate("Home");
+                setLoginStatus(true);
               }}
             >
               <Text style={styles.btntext}>Увійти</Text>
