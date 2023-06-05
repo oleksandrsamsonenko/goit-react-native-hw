@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
+import { useState, useEffect } from "react";
 
 import PostsScreen from "./PostsScreen";
 import CreatePostsScreen from "./CreatePostsScreen";
@@ -9,6 +10,15 @@ import LogOut from "../../Components/LogOut";
 
 export default function Home({ navigation }) {
   const Tabs = createBottomTabNavigator();
+
+  const [posts, setPosts] = useState([]);
+
+  // useEffect(() => {
+  //   if (route.params) {
+  //     setPosts((prev) => [...prev, route.params]);
+  //   }
+  // }, [route]);
+
   return (
     <Tabs.Navigator
       screenOptions={{

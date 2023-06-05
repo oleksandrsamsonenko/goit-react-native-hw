@@ -28,7 +28,6 @@ export default function RegistrationScreen({ setLoginStatus }) {
   const [data, setData] = useState(initialState);
   const [image, setImage] = useState(null);
   const navigation = useNavigation();
-
   const hideKeyboard = () => {
     Keyboard.dismiss();
     setKeyboard(false);

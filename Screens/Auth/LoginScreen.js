@@ -78,7 +78,6 @@ export default function LoginScreen({ setLoginStatus }) {
             <TouchableOpacity
               style={styles.btn}
               onPress={() => {
-                console.log("FROM LOGIN", data);
                 // navigation.navigate("Home");
                 setLoginStatus(true);
               }}

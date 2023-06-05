@@ -15,17 +15,17 @@ import {
 } from "@expo/vector-icons";
 import { TextInput } from "react-native";
 import { useState, useEffect } from "react";
-import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
+import MapView, { Marker } from "react-native-maps";
 
 initialData = {
   name: "",
   location: "",
 };
 
-export default function CreatePostsScreen() {
+export default function CreatePostsScreen({ navigation }) {
   const [keyboard, setKeyboard] = useState(false);
   const [postData, setPostData] = useState(initialData);
   const [image, setImage] = useState(null);
@@ -40,17 +40,6 @@ export default function CreatePostsScreen() {
     setKeyboard(false);
   };
   const publish = postData.name && postData.location && image;
-
-  const pick = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
 
   useEffect(() => {
     (async () => {
@@ -132,8 +121,8 @@ export default function CreatePostsScreen() {
                   if (cameraRef) {
                     const { uri } = await cameraRef.takePictureAsync();
                     setImage(uri);
-                    console.log(uri);
-                    console.log(location);
+                    // console.log(uri);
+                    // console.log(location);
                     await MediaLibrary.createAssetAsync(uri);
                   }
                 }}
@@ -153,6 +142,29 @@ export default function CreatePostsScreen() {
               {!image ? "Завантажте фото" : "Редагувати фото"}
             </Text>
           </View>
+
+          {/* {location && (
+            <View style={styles.uploadwrapper}>
+              <MapView
+                style={styles.map}
+                region={{
+                  ...location,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+                showsUserLocation={true}
+              >
+                {location && (
+                  <Marker
+                    title="I am here"
+                    coordinate={location}
+                    description="Hello"
+                  />
+                )}
+              </MapView>
+            </View>
+          )} */}
+
           <TextInput
             style={styles.input}
             placeholder="Назва"
@@ -182,7 +194,14 @@ export default function CreatePostsScreen() {
           {publish ? (
             <TouchableOpacity
               style={{ ...styles.btn, backgroundColor: "#FF6C00" }}
-              onPress={() => console.log(image, postData)}
+              onPress={() => {
+                navigation.navigate("Home", {
+                  screen: "PostsScreen",
+                  params: { ...postData, photo: image },
+                });
+
+                // console.log(image, postData);
+              }}
             >
               <Text style={{ fontSize: 16, color: "#FFFFFF" }}>
                 Опублікувати
@@ -297,5 +316,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     right: 10,
+  },
+  map: {
+    width: "100%",
+    height: "100%",
   },
 });
