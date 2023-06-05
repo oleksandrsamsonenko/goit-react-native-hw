@@ -39,7 +39,8 @@ export default function CreatePostsScreen({ navigation }) {
     Keyboard.dismiss();
     setKeyboard(false);
   };
-  const publish = postData.name && postData.location && image;
+  const publish = postData.name && postData.location && image && location;
+  const ready = postData.name && postData.location && image && !location;
 
   useEffect(() => {
     (async () => {
@@ -54,6 +55,7 @@ export default function CreatePostsScreen({ navigation }) {
         longitude: location.coords.longitude,
       };
       setLocation(coords);
+      console.log(location);
     })();
   }, []);
 
@@ -197,7 +199,7 @@ export default function CreatePostsScreen({ navigation }) {
               onPress={() => {
                 navigation.navigate("Home", {
                   screen: "PostsScreen",
-                  params: { ...postData, photo: image },
+                  params: { ...postData, photo: image, coords: location },
                 });
 
                 // console.log(image, postData);
@@ -210,7 +212,7 @@ export default function CreatePostsScreen({ navigation }) {
           ) : (
             <View style={styles.btn}>
               <Text style={{ fontSize: 16, color: "#BDBDBD" }}>
-                Опублікувати
+                {ready ? "Зачекайте, отримую розташування" : "Опублікувати"}
               </Text>
             </View>
           )}

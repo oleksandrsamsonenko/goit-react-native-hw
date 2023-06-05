@@ -10,6 +10,7 @@ export default function PostsScreen({ route }) {
       setPosts((prev) => [...prev, route.params]);
     }
   }, [route]);
+  console.log(route.params);
   return (
     <View
       style={{
@@ -108,6 +109,12 @@ export default function PostsScreen({ route }) {
                 </Text>
               </View>
             </View>
+            <Text style={{ textDecorationLine: "underline" }}>
+              {item.coords.latitude}
+            </Text>
+            <Text style={{ textDecorationLine: "underline" }}>
+              {item.coords.longitude}
+            </Text>
           </View>
         )}
       />
