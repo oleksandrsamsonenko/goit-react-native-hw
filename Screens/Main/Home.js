@@ -9,7 +9,6 @@ import LogOut from "../../Components/LogOut";
 
 export default function Home({ navigation }) {
   const Tabs = createBottomTabNavigator();
-
   return (
     <Tabs.Navigator
       screenOptions={{
@@ -31,27 +30,6 @@ export default function Home({ navigation }) {
           ),
         }}
       />
-      {/* <Tabs.Screen
-        name="CreatePostsScreen1"
-        component={CreatePostsScreen}
-        options={{
-          // headerShown: false,
-          tabBarIcon: ({ focused, color, size }) => (
-            <View
-              style={{
-                backgroundColor: "#FF6C00",
-                width: 70,
-                height: 40,
-                borderRadius: 20,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <AntDesign name="plus" size={15} color="white" />
-            </View>
-          ),
-        }}
-      /> */}
 
       <Tabs.Screen
         name="CreatePostsScreen"

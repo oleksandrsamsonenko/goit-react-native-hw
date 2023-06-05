@@ -123,7 +123,6 @@ export default function RegistrationScreen({ setLoginStatus }) {
             <TouchableOpacity
               style={styles.btn}
               onPress={() => {
-                console.log(data, image);
                 setLoginStatus(true);
               }}
             >

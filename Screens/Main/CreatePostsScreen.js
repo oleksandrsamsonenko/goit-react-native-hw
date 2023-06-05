@@ -8,10 +8,17 @@ import {
   Pressable,
   Image,
 } from "react-native";
-import { MaterialIcons, Feather } from "@expo/vector-icons";
+import {
+  MaterialIcons,
+  Feather,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { TextInput } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
 
 initialData = {
   name: "",
@@ -22,6 +29,11 @@ export default function CreatePostsScreen() {
   const [keyboard, setKeyboard] = useState(false);
   const [postData, setPostData] = useState(initialData);
   const [image, setImage] = useState(null);
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [location, setLocation] = useState(null);
 
   const hideKeyboard = () => {
     Keyboard.dismiss();
@@ -40,45 +52,97 @@ export default function CreatePostsScreen() {
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setLocation(coords);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
       <View style={styles.container}>
         <View style={{ flex: 1, width: "100%" }}>
-          {!image ? (
+          {image ? (
             <View style={styles.uploadwrapper}>
+              <Image source={{ uri: image }} style={styles.image} />
               <Pressable
-                style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: 30,
-                  backgroundColor: "#FFFFFF",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                onPress={pick}
+                style={styles.iconwrapper}
+                onPress={() => setImage(null)}
               >
-                <MaterialIcons name="camera-alt" size={24} color="#BDBDBD" />
+                <MaterialCommunityIcons
+                  name="camera-retake-outline"
+                  size={24}
+                  color="#FFFFFF"
+                />
               </Pressable>
             </View>
           ) : (
             <View style={styles.uploadwrapper}>
-              <Image source={{ uri: image }} style={styles.image} />
-              <Pressable
-                style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: 30,
-                  backgroundColor: "#FFFFFF4D",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  position: "absolute",
+              <Camera
+                style={styles.camera}
+                type={type}
+                ref={setCameraRef}
+              ></Camera>
+              <TouchableOpacity
+                style={styles.flipwrapper}
+                onPress={() => {
+                  setType(
+                    type === Camera.Constants.Type.back
+                      ? Camera.Constants.Type.front
+                      : Camera.Constants.Type.back
+                  );
                 }}
-                onPress={pick}
               >
-                <MaterialIcons name="camera-alt" size={24} color="#FFFFFF" />
-              </Pressable>
+                <MaterialCommunityIcons
+                  name="camera-flip-outline"
+                  size={24}
+                  color="#BDBDBD"
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.iconwrapper}
+                onPress={async () => {
+                  if (cameraRef) {
+                    const { uri } = await cameraRef.takePictureAsync();
+                    setImage(uri);
+                    console.log(uri);
+                    console.log(location);
+                    await MediaLibrary.createAssetAsync(uri);
+                  }
+                }}
+              >
+                <MaterialIcons name="camera-alt" size={24} color="#BDBDBD" />
+              </TouchableOpacity>
             </View>
           )}
+
           <View style={{ width: "100%" }}>
             <Text
               style={{
@@ -86,7 +150,7 @@ export default function CreatePostsScreen() {
                 color: "#BDBDBD",
               }}
             >
-              Завантажте фото
+              {!image ? "Завантажте фото" : "Редагувати фото"}
             </Text>
           </View>
           <TextInput
@@ -208,5 +272,30 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
+  },
+  camera: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
+  },
+  iconwrapper: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#FFFFFF4D",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+  },
+  flipwrapper: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#FFFFFF4D",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
 });

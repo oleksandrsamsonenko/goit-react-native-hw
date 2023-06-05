@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import LoginScreen from "./Screens/Auth/LoginScreen";
 import RegistrationScreen from "./Screens/Auth/RegistrationScreen";
@@ -19,18 +19,12 @@ const useRoute = (isAuth, setLoginStatus) => {
       <AuthStack.Navigator initialRouteName="Login">
         <AuthStack.Screen
           name="Register"
-          // component={
-          //   (render = () => (
-          //     <RegistrationScreen setLoginStatus={setLoginStatus} />
-          //   ))
-          // }
           children={
             (render = () => (
               <RegistrationScreen setLoginStatus={setLoginStatus} />
             ))
           }
           options={{ headerShown: false }}
-          BITCH={setLoginStatus}
         />
         <AuthStack.Screen
           name="Login"
@@ -62,6 +56,13 @@ const useRoute = (isAuth, setLoginStatus) => {
       ></MainStack.Screen>
     </MainStack.Navigator>
   );
+};
+
+const initialState = {
+  login: "Default Name",
+  email: "",
+  password: "",
+  photo: "",
 };
 
 export default function App() {

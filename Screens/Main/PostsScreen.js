@@ -1,6 +1,6 @@
-import { View, Text, Image, Button } from "react-native";
+import { View, Text, Image } from "react-native";
 
-export default function PostsScreen({ navigation }) {
+export default function PostsScreen({}) {
   return (
     <View
       style={{
@@ -24,8 +24,8 @@ export default function PostsScreen({ navigation }) {
           <Image />
         </View>
         <View style={{ justifyContent: "center" }}>
-          <Text style={{ fontWeight: 700, fontSize: 13 }}>Natali Romanova</Text>
-          <Text style={{ fontWeight: 400, fontSize: 11 }}>email@gmail.com</Text>
+          <Text style={{ fontWeight: 700, fontSize: 13 }}>LOGIN</Text>
+          <Text style={{ fontWeight: 400, fontSize: 11 }}>EMAIL</Text>
         </View>
       </View>
     </View>
