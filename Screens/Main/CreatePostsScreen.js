@@ -55,7 +55,6 @@ export default function CreatePostsScreen({ navigation }) {
         longitude: location.coords.longitude,
       };
       setLocation(coords);
-      console.log(location);
     })();
   }, []);
 
@@ -123,8 +122,7 @@ export default function CreatePostsScreen({ navigation }) {
                   if (cameraRef) {
                     const { uri } = await cameraRef.takePictureAsync();
                     setImage(uri);
-                    // console.log(uri);
-                    // console.log(location);
+
                     await MediaLibrary.createAssetAsync(uri);
                   }
                 }}
@@ -144,28 +142,6 @@ export default function CreatePostsScreen({ navigation }) {
               {!image ? "Завантажте фото" : "Редагувати фото"}
             </Text>
           </View>
-
-          {/* {location && (
-            <View style={styles.uploadwrapper}>
-              <MapView
-                style={styles.map}
-                region={{
-                  ...location,
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                }}
-                showsUserLocation={true}
-              >
-                {location && (
-                  <Marker
-                    title="I am here"
-                    coordinate={location}
-                    description="Hello"
-                  />
-                )}
-              </MapView>
-            </View>
-          )} */}
 
           <TextInput
             style={styles.input}
@@ -197,12 +173,11 @@ export default function CreatePostsScreen({ navigation }) {
             <TouchableOpacity
               style={{ ...styles.btn, backgroundColor: "#FF6C00" }}
               onPress={() => {
-                navigation.navigate("Home", {
-                  screen: "PostsScreen",
-                  params: { ...postData, photo: image, coords: location },
+                navigation.navigate("DefaultScreen", {
+                  ...postData,
+                  photo: image,
+                  coords: location,
                 });
-
-                // console.log(image, postData);
               }}
             >
               <Text style={{ fontSize: 16, color: "#FFFFFF" }}>

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+
 import {
   StyleSheet,
   Text,
@@ -12,21 +14,28 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { CustomInput } from "../../Components/CustomInput";
+import { authSignIn } from "../../redux/auth/authOperations";
 
 const initialState = {
   email: "",
   password: "",
 };
 
-export default function LoginScreen({ setLoginStatus }) {
+export default function LoginScreen() {
   const [keyboard, setKeyboard] = useState(false);
   const [hidden, setHidden] = useState(true);
   const [data, setData] = useState(initialState);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const hideKeyboard = () => {
     Keyboard.dismiss();
     setKeyboard(false);
+  };
+
+  const handleSubmit = async () => {
+    dispatch(authSignIn(data.email, data.password));
+    hideKeyboard();
   };
 
   return (
@@ -78,8 +87,7 @@ export default function LoginScreen({ setLoginStatus }) {
             <TouchableOpacity
               style={styles.btn}
               onPress={() => {
-                // navigation.navigate("Home");
-                setLoginStatus(true);
+                handleSubmit();
               }}
             >
               <Text style={styles.btntext}>Увійти</Text>

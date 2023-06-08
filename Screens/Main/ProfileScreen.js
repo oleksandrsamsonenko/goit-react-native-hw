@@ -3,17 +3,15 @@ import {
   Text,
   View,
   ImageBackground,
-  TouchableOpacity,
   Pressable,
-  KeyboardAvoidingView,
-  Keyboard,
-  TouchableWithoutFeedback,
   Image,
 } from "react-native";
+import { useSelector } from "react-redux";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import LogOut from "../../Components/LogOut";
 
 export default function ProfileScreen() {
+  const { nickname, photoURL } = useSelector((state) => state.auth);
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <ImageBackground
@@ -28,33 +26,15 @@ export default function ProfileScreen() {
             </Pressable>
           </View>
           <View style={styles.titlewrapper}>
-            <Text style={styles.title}>Natali Romanova</Text>
+            <Text style={styles.title}>{nickname}</Text>
           </View>
           <View style={styles.logout}>
             <LogOut />
           </View>
 
-          <View
-            style={{
-              width: "100%",
-              height: 240,
-              backgroundColor: "#E8E8E8",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 8,
-            }}
-          ></View>
+          <View style={styles.image}></View>
           <View style={{ width: "100%" }}>
-            <Text
-              style={{
-                marginTop: 8,
-                color: "#212121",
-                fontSize: 16,
-                fontWeight: 500,
-              }}
-            >
-              Завантажте фото
-            </Text>
+            <Text style={styles.name}>Завантажте фото</Text>
           </View>
           <View
             style={{
@@ -155,5 +135,19 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 22,
     right: 0,
+  },
+  image: {
+    width: "100%",
+    height: 240,
+    backgroundColor: "#E8E8E8",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+  },
+  name: {
+    marginTop: 8,
+    color: "#212121",
+    fontSize: 16,
+    fontWeight: 500,
   },
 });

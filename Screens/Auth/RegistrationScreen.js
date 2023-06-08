@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
@@ -15,22 +16,30 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { CustomInput } from "../../Components/CustomInput";
 import * as ImagePicker from "expo-image-picker";
+import { authSignUp } from "../../redux/auth/authOperations";
 
 const initialState = {
-  login: "",
+  nickname: "",
   email: "",
   password: "",
 };
 
-export default function RegistrationScreen({ setLoginStatus }) {
+export default function RegistrationScreen() {
   const [keyboard, setKeyboard] = useState(false);
   const [hidden, setHidden] = useState(true);
   const [data, setData] = useState(initialState);
   const [image, setImage] = useState(null);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const hideKeyboard = () => {
     Keyboard.dismiss();
     setKeyboard(false);
+  };
+
+  const handleSubmit = async () => {
+    dispatch(authSignUp(data.email, data.password, data.nickname));
+    hideKeyboard();
   };
 
   const pick = async () => {
@@ -79,11 +88,11 @@ export default function RegistrationScreen({ setLoginStatus }) {
               <CustomInput
                 style={styles.input}
                 placeholder="Логін"
-                value={data.login}
-                name="login"
+                value={data.nickname}
+                name="nickname"
                 onFocus={() => setKeyboard(true)}
                 onChangeText={(value) =>
-                  setData((prev) => ({ ...prev, login: value }))
+                  setData((prev) => ({ ...prev, nickname: value }))
                 }
               ></CustomInput>
               <CustomInput
@@ -122,7 +131,7 @@ export default function RegistrationScreen({ setLoginStatus }) {
             <TouchableOpacity
               style={styles.btn}
               onPress={() => {
-                setLoginStatus(true);
+                dispatch(handleSubmit);
               }}
             >
               <Text style={styles.btntext}>Зареєструватися</Text>
