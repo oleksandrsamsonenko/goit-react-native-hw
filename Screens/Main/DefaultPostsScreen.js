@@ -6,41 +6,42 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Feather } from "@expo/vector-icons";
+import { getPosts } from "../../redux/main/mainOperations";
 
 export default function DefaultPostsScreen({ route, navigation }) {
-  const [posts, setPosts] = useState([]);
-  const { userID, email, nickname, photoURL } = useSelector(
-    (state) => state.auth
-  );
+  const { posts } = useSelector((state) => state.main);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    if (route.params) {
-      setPosts((prev) => [...prev, route.params]);
-    }
-  }, [route]);
+    dispatch(getPosts());
+  }, []);
+
+  const { email, nickname, photoURL } = useSelector((state) => state.auth);
+  // console.log(photoURL);
+  // console.log(`SPISOK `, posts);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.avatarwrapper}>
-          <Image
-            source={require("../../assets/PhotoBG.jpg")}
-            style={styles.avatar}
-          />
+          <Image source={{ uri: photoURL }} style={styles.avatar} />
         </View>
         <View style={{ justifyContent: "center" }}>
           <Text style={{ fontWeight: 700, fontSize: 13 }}>{nickname}</Text>
           <Text style={{ fontWeight: 400, fontSize: 11 }}>{email}</Text>
         </View>
       </View>
+
       <FlatList
         style={{ marginTop: 15, width: "100%" }}
         data={posts}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={{ width: "100%" }}>
-            <Image source={{ uri: item.photo }} style={styles.image} />
+            <Image source={{ uri: item.photoURL }} style={styles.image} />
             <View style={{ width: "100%" }}>
               <Text style={styles.title}>{item.name}</Text>
             </View>
@@ -76,8 +77,8 @@ export default function DefaultPostsScreen({ route, navigation }) {
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate("MapScreen", {
-                      lat: item.coords.latitude,
-                      lon: item.coords.longitude,
+                      lat: item.latitude,
+                      lon: item.longitude,
                     })
                   }
                 >

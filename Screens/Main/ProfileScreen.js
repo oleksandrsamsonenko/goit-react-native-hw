@@ -3,27 +3,34 @@ import {
   Text,
   View,
   ImageBackground,
-  Pressable,
   Image,
+  FlatList,
 } from "react-native";
 import { useSelector } from "react-redux";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import LogOut from "../../Components/LogOut";
 
 export default function ProfileScreen() {
-  const { nickname, photoURL } = useSelector((state) => state.auth);
+  const { userID, nickname, photoURL } = useSelector((state) => state.auth);
+  const { posts } = useSelector((state) => state.main);
+  const myPosts = posts.filter((item) => item.userID === userID);
+  // console.log(`ALL POSTS`, posts);
+  // console.log(`MINE`, myPosts);
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <ImageBackground
         source={require("../../assets/PhotoBG.jpg")}
         style={styles.background}
       >
         <View style={styles.topform}>
           <View style={styles.uploadwrapper}>
-            <Image style={styles.upload} />
-            <Pressable style={styles.addicon}>
-              <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
-            </Pressable>
+            <Image style={styles.upload} source={{ uri: photoURL }} />
           </View>
           <View style={styles.titlewrapper}>
             <Text style={styles.title}>{nickname}</Text>
@@ -32,58 +39,87 @@ export default function ProfileScreen() {
             <LogOut />
           </View>
 
-          <View style={styles.image}></View>
-          <View style={{ width: "100%" }}>
-            <Text style={styles.name}>Завантажте фото</Text>
-          </View>
-          <View
-            style={{
-              width: "100%",
-              marginTop: 11,
-              justifyContent: "space-between",
-              flexDirection: "row",
-            }}
-          >
-            <View
-              style={{
-                gap: 27,
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <View
-                style={{
-                  gap: 9,
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Feather name="message-circle" size={24} color="#FF6C00" />
-                <Text>5</Text>
+          <FlatList
+            style={{ marginTop: 15, width: "100%" }}
+            data={myPosts}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={{ width: "100%", marginTop: 25 }}>
+                <View style={{ width: "100%" }}>
+                  <Image
+                    source={{ uri: item.photoURL }}
+                    style={{
+                      width: "100%",
+                      height: 240,
+                      backgroundColor: "#E8E8E8",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 8,
+                    }}
+                  />
+                  <Text style={styles.name}>{item.name}</Text>
+                </View>
+                <View
+                  style={{
+                    width: "100%",
+                    marginTop: 11,
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                  }}
+                >
+                  <View
+                    style={{
+                      gap: 27,
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        gap: 9,
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Feather
+                        name="message-circle"
+                        size={24}
+                        color="#FF6C00"
+                      />
+                      <Text>5</Text>
+                    </View>
+                    <View
+                      style={{
+                        gap: 9,
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Feather name="thumbs-up" size={24} color="#FF6C00" />
+                      <Text>12</Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    <Feather
+                      style={styles.pin}
+                      name="map-pin"
+                      size={24}
+                      color="#BDBDBD"
+                    />
+                    <Text style={{ textDecorationLine: "underline" }}>
+                      {item.location}
+                    </Text>
+                  </View>
+                </View>
               </View>
-              <View
-                style={{
-                  gap: 9,
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Feather name="thumbs-up" size={24} color="#FF6C00" />
-                <Text>153</Text>
-              </View>
-            </View>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-            >
-              <Feather
-                style={styles.pin}
-                name="map-pin"
-                size={24}
-                color="#BDBDBD"
-              />
-              <Text style={{ textDecorationLine: "underline" }}>Ukraine</Text>
-            </View>
-          </View>
+            )}
+          ></FlatList>
         </View>
       </ImageBackground>
     </View>
@@ -105,6 +141,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     paddingHorizontal: 16,
     paddingBottom: 20,
+    marginTop: 325,
   },
   uploadwrapper: {
     marginTop: -60,

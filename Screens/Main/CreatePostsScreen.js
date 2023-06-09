@@ -1,3 +1,6 @@
+import "firebase/storage";
+import { collection, addDoc, getFirestore } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import {
   View,
   Text,
@@ -7,18 +10,21 @@ import {
   Keyboard,
   Pressable,
   Image,
+  TextInput,
+  ActivityIndicator,
 } from "react-native";
 import {
   MaterialIcons,
   Feather,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { TextInput } from "react-native";
 import { useState, useEffect } from "react";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
-import MapView, { Marker } from "react-native-maps";
+import firebase from "../../firebase/config";
+import { useSelector, useDispatch } from "react-redux";
+import { getPosts } from "../../redux/main/mainOperations";
 
 initialData = {
   name: "",
@@ -26,21 +32,18 @@ initialData = {
 };
 
 export default function CreatePostsScreen({ navigation }) {
+  const { userID } = useSelector((state) => state.auth);
+
   const [keyboard, setKeyboard] = useState(false);
   const [postData, setPostData] = useState(initialData);
   const [image, setImage] = useState(null);
+  const [state, setState] = useState("ok");
 
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [location, setLocation] = useState(null);
-
-  const hideKeyboard = () => {
-    Keyboard.dismiss();
-    setKeyboard(false);
-  };
-  const publish = postData.name && postData.location && image && location;
-  const ready = postData.name && postData.location && image && !location;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
@@ -67,6 +70,50 @@ export default function CreatePostsScreen({ navigation }) {
     })();
   }, []);
 
+  const hideKeyboard = () => {
+    Keyboard.dismiss();
+    setKeyboard(false);
+  };
+
+  const uploadPhotoToServer = async () => {
+    const storage = getStorage(firebase);
+    const base = getFirestore(firebase);
+
+    const filename = image.uri.substring(image.uri.lastIndexOf("/") + 1);
+    // console.log(`URI`, image.uri);
+    const photo = await fetch(image.uri);
+    const blob = await photo.blob();
+    const storageRef = ref(storage, "images/" + filename);
+
+    try {
+      setState(`loading`);
+      await uploadBytes(storageRef, blob);
+      const processedPhoto = await getDownloadURL(storageRef);
+
+      await addDoc(collection(base, "posts"), {
+        name: postData.name,
+        location: postData.location,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        photoURL: processedPhoto,
+        userID: userID,
+      });
+
+      setState("ok");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleSubmit = async () => {
+    await uploadPhotoToServer();
+    dispatch(getPosts());
+    navigation.navigate("DefaultScreen");
+  };
+
+  const publish = postData.name && postData.location && image && location;
+  const ready = postData.name && postData.location && image && !location;
+
   if (hasPermission === null) {
     return <View />;
   }
@@ -80,7 +127,7 @@ export default function CreatePostsScreen({ navigation }) {
         <View style={{ flex: 1, width: "100%" }}>
           {image ? (
             <View style={styles.uploadwrapper}>
-              <Image source={{ uri: image }} style={styles.image} />
+              <Image source={{ uri: image.uri }} style={styles.image} />
               <Pressable
                 style={styles.iconwrapper}
                 onPress={() => setImage(null)}
@@ -120,10 +167,10 @@ export default function CreatePostsScreen({ navigation }) {
                 style={styles.iconwrapper}
                 onPress={async () => {
                   if (cameraRef) {
-                    const { uri } = await cameraRef.takePictureAsync();
-                    setImage(uri);
+                    const image = await cameraRef.takePictureAsync();
+                    setImage(image);
 
-                    await MediaLibrary.createAssetAsync(uri);
+                    // await MediaLibrary.createAssetAsync(image.uri);
                   }
                 }}
               >
@@ -169,16 +216,12 @@ export default function CreatePostsScreen({ navigation }) {
               color="#BDBDBD"
             />
           </View>
-          {publish ? (
+          {state === "loading" ? (
+            <ActivityIndicator size="large" color="#FF6C00" />
+          ) : publish ? (
             <TouchableOpacity
               style={{ ...styles.btn, backgroundColor: "#FF6C00" }}
-              onPress={() => {
-                navigation.navigate("DefaultScreen", {
-                  ...postData,
-                  photo: image,
-                  coords: location,
-                });
-              }}
+              onPress={handleSubmit}
             >
               <Text style={{ fontSize: 16, color: "#FFFFFF" }}>
                 Опублікувати

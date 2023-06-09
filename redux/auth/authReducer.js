@@ -5,6 +5,7 @@ const initialState = {
   nickname: null,
   email: null,
   photoURL: null,
+  stateChange: null,
 };
 
 export const authSlice = createSlice({
@@ -16,7 +17,11 @@ export const authSlice = createSlice({
       userID: payload.userID,
       email: payload.email,
       nickname: payload.nickname,
-      // photoURL: payload.photoURL,
+      photoURL: payload.photoURL,
+    }),
+    authStateChange: (state, { payload }) => ({
+      ...state,
+      stateChange: payload.stateChange,
     }),
     userSignOut: () => initialState,
   },

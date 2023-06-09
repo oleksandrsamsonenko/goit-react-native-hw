@@ -17,8 +17,8 @@ import { CustomInput } from "../../Components/CustomInput";
 import { authSignIn } from "../../redux/auth/authOperations";
 
 const initialState = {
-  email: "",
-  password: "",
+  email: "anna@gmail.com",
+  password: "qwerty",
 };
 
 export default function LoginScreen() {

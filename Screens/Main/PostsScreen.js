@@ -3,9 +3,9 @@ import DefaultPostsScreen from "./DefaultPostsScreen";
 import CommentsScreen from "./CommentsScreen";
 import MapScreen from "./MapScreen";
 
-const NestedScreen = createStackNavigator();
-
 export default function PostsScreen() {
+  const NestedScreen = createStackNavigator();
+
   return (
     <NestedScreen.Navigator>
       <NestedScreen.Screen

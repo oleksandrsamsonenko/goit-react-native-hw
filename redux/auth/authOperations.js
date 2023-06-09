@@ -1,25 +1,28 @@
-import auth from "../../firebase/config";
+import { getAuth } from "firebase/auth";
+import firebase from "../../firebase/config";
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { authSlice } from "./authReducer";
 
-const { updateUserInfo, userSignOut } = authSlice.actions;
+const { updateUserInfo, userSignOut, authStateChange } = authSlice.actions;
+const auth = getAuth(firebase);
 
 export const authSignIn = (email, password) => async (dispatch, getState) => {
-  // console.log("AUTH ", email, password);
   try {
     const { user } = await signInWithEmailAndPassword(auth, email, password);
-    // console.log(user);
+    // console.log("USER", user);
     dispatch(
       updateUserInfo({
         userID: user.uid,
         email: user.email,
         nickname: user.displayName,
-        // photoURL: user.photoURL,
+        photoURL: user.photoURL,
       })
     );
   } catch (error) {
@@ -28,25 +31,23 @@ export const authSignIn = (email, password) => async (dispatch, getState) => {
 };
 
 export const authSignUp =
-  (email, password, nickname) => async (dispatch, getState) => {
+  (email, password, nickname, photoURL) => async (dispatch, getState) => {
     try {
       const { user } = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      const updated = await updateProfile(auth.currentUser, {
+      await updateProfile(auth.currentUser, {
         displayName: nickname,
-        // photoURL:
-        //   "https://www.film.ru/sites/default/files/people/2585937-998375.jpg",
+        photoURL: photoURL,
       });
       dispatch(
         updateUserInfo({
           userID: user.uid,
           email: user.email,
           nickname: nickname,
-          // photoURL:
-          //   "https://www.film.ru/sites/default/files/people/2585937-998375.jpg",
+          photoURL: photoURL,
         })
       );
     } catch (error) {
@@ -57,9 +58,23 @@ export const authSignUp =
 export const authSignOut = () => async (dispatch, getState) => {
   try {
     const response = await signOut(auth);
-    // console.log(response);
     dispatch(userSignOut());
   } catch (error) {
     console.log(error);
   }
+};
+
+export const authStateChangeUser = () => async (dispatch, getState) => {
+  await onAuthStateChanged(auth, (user) => {
+    // console.log(`USER `, user);
+    if (user) {
+      const userUpdateProfile = {
+        nickName: user.displayName,
+        userId: user.uid,
+      };
+
+      dispatch(authStateChange({ stateChange: true }));
+      dispatch(updateUserInfo(userUpdateProfile));
+    }
+  });
 };
